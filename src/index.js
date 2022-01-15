@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-
+import CatPagination from "./CatPagination";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <CatPagination />
+    <CatPagination itemsPerPage={4} />,
   </React.StrictMode>,
   document.getElementById("container")
 );

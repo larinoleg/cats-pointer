@@ -1,62 +1,73 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import ReactDOM from "react-dom";
 
-function Items({ currentItems }) {
-  return (
-    <>
-      {currentItems &&
-        currentItems.map((item) => (
-          <div>
-            <h3>Item #{item.name}</h3>
-            <img src={item.image_url} />
+const CatPagination = () => {
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [items, setItems] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const usersPerPage = 2;
+  const pagesVisited = pageNumber * usersPerPage;
+
+  const displayItems = items
+    .slice(pagesVisited, pagesVisited + usersPerPage)
+    .map((item) => {
+      return (
+        <div id="cat">
+          <div id="name">
+            {" "}
+            <h1> {item.name} </h1>{" "}
           </div>
-        ))}
-    </>
-  );
-}
-
-function PaginatedItems({ itemsPerPage }) {
-  // We start with an empty list of items.
-  const [currentItems, setCurrentItems] = useState(null);
-  const [pageCount, setPageCount] = useState(0);
-  // Here we use item offsets; we could also use page offsets
-  // following the API or data you're working with.
-  const [itemOffset, setItemOffset] = useState(0);
+          <img src={item.image_url} />
+        </div>
+      );
+    });
 
   useEffect(() => {
-    // Fetch items from another resources.
-    const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    setCurrentItems(items.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(items.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage]);
+    fetch("https://cats-api.strsqr.cloud/cats?p=2")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setItems(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, []);
 
-  // Invoke when user click to request another page.
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % items.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
+  if (error) {
+    return <div>Ошибка: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Загрузка...</div>;
+  } else {
+    const pageCount = Math.ceil(items.length / usersPerPage);
+
+    const changePage = ({ selected }) => {
+      console.log("abc");
+      setPageNumber(selected);
+      console.log(selected);
+    };
+
+    return (
+      <div className="App">
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          pageCount={pageCount}
+          onPageChange={changePage}
+          containerClassName={"navigationButtons"}
+          previousLinkClassName={"previousButton"}
+          nextLinkClassName={"nextButton"}
+          disabledClassName={"navigationDisabled"}
+          activeClassName={"navigationActive"}
+        />
+        {displayItems}
+      </div>
     );
-    setItemOffset(newOffset);
-  };
+  }
+};
 
-  return (
-    <>
-      <Items currentItems={currentItems} />
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel="next >"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
-        pageCount={pageCount}
-        previousLabel="< previous"
-        renderOnZeroPageCount={null}
-      />
-    </>
-  );
-}
-ReactDOM.render(
-  <PaginatedItems itemsPerPage={4} />,
-  document.getElementById("container")
-);
+export default CatPagination;
