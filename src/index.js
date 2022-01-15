@@ -3,11 +3,12 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import CatPagination from "./CatPagination";
+import DescCat from "./DescCat";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <CatPagination itemsPerPage={4} />,
+    <DescCat />,
   </React.StrictMode>,
   document.getElementById("container")
 );
