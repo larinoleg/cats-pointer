@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
 const CatPagination = () => {
-  console.log("params");
-  console.log(useParams());
+  let [params] = useSearchParams();
+  const page = Number(params.get("p") ?? "1");
+
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const usersPerPage = 2;
+  const usersPerPage = 10;
   const pagesVisited = pageNumber * usersPerPage;
+  const nextPage = page + 1;
+  const prvPage = page - 1;
+  const urlCat = `/?p=${nextPage}`;
+  const urlCat2 = `/?p=${prvPage}`;
+
+  const navigate = useNavigate();
 
   const displayItems = items
     .slice(pagesVisited, pagesVisited + usersPerPage)
@@ -28,7 +35,11 @@ const CatPagination = () => {
     });
 
   useEffect(() => {
-    fetch("https://cats-api.strsqr.cloud/cats?p=2")
+    fetch(`https://cats-api.strsqr.cloud/cats?p=${page}`)
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
       .then((res) => res.json())
       .then(
         (result) => {
@@ -47,17 +58,17 @@ const CatPagination = () => {
   } else if (!isLoaded) {
     return <div>Загрузка...</div>;
   } else {
-    const pageCount = Math.ceil(items.length / usersPerPage);
+    const pageCount = 10;
 
     const changePage = ({ selected }) => {
       console.log("abc");
       setPageNumber(selected);
-      console.log(selected);
+      navigate(`?p=${selected + 1}`);
     };
 
     return (
       <div className="App">
-        <ReactPaginate
+        {/* <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
           pageCount={pageCount}
@@ -67,7 +78,19 @@ const CatPagination = () => {
           nextLinkClassName={"nextButton"}
           disabledClassName={"navigationDisabled"}
           activeClassName={"navigationActive"}
-        />
+        /> */}
+        <div className="button">
+          <a href={urlCat}>
+            <button type="button">next</button>
+          </a>
+        </div>
+
+        <div className="button">
+          <a href={urlCat2}>
+            <button type="button">previous</button>
+          </a>
+        </div>
+
         {displayItems}
       </div>
     );
