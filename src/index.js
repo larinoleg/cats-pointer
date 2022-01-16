@@ -4,11 +4,17 @@ import "./index.css";
 import App from "./App";
 import CatPagination from "./CatPagination";
 import DescCat from "./DescCat";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <DescCat />,
+    <Router>
+      <Routes>
+        <Route path="/" element={<CatPagination />} />
+        <Route path="/:id" element={<DescCat />} />
+      </Routes>
+    </Router>
   </React.StrictMode>,
   document.getElementById("container")
 );

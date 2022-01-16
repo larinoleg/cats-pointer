@@ -10,6 +10,15 @@
   border: 2px solid black;
 }
 
+.desc {
+  width: 40%;
+  height: auto;
+  margin: auto;
+  padding: 1em;
+
+  border: 2px solid black;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

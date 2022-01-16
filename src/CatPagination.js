@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { useParams } from "react-router-dom";
 
 const CatPagination = () => {
+  console.log("params");
+  console.log(useParams());
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
@@ -12,11 +15,12 @@ const CatPagination = () => {
   const displayItems = items
     .slice(pagesVisited, pagesVisited + usersPerPage)
     .map((item) => {
+      const href = `/${item.slug}`;
       return (
         <div id="cat">
           <div id="name">
             {" "}
-            <h1> {item.name} </h1>{" "}
+            <a href={href}> {item.name} </a>{" "}
           </div>
           <img src={item.image_url} />
         </div>
