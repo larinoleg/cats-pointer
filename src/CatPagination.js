@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import axios from "axios";
-
 const CatPagination = () => {
   let navigate = useNavigate();
   let [params] = useSearchParams();
@@ -11,6 +9,7 @@ const CatPagination = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
+  const [catsCount, setCatCount] = useState([]);
   const [searchValue, setSearchValue] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const usersPerPage = 10;
@@ -19,6 +18,22 @@ const CatPagination = () => {
   const prvPage = page - 1;
   const urlCat = `/?p=${nextPage}`;
   const urlCat2 = `/?p=${prvPage}`;
+
+  const fetchCats = (p, q) => {
+    fetch(`https://cats-api.strsqr.cloud/cats?p=${p}&q=${q}`)
+      .then(async (response) => {
+        const catsCount = Number(response.headers.get("Cats-Count"));
+        const items = await response.json();
+
+        setCatCount(catsCount);
+        setIsLoaded(true);
+        setItems(items);
+      })
+      .catch((error) => {
+        setIsLoaded(true);
+        setError(error);
+      });
+  };
 
   const displayItems = items
     .slice(pagesVisited, pagesVisited + usersPerPage)
@@ -41,22 +56,7 @@ const CatPagination = () => {
     });
 
   useEffect(() => {
-    fetch(`https://cats-api.strsqr.cloud/cats?p=${page}&q=${q}`)
-      .then((res) => {
-        console.log(res);
-        return res;
-      })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
+    fetchCats(page, q);
   }, []);
 
   if (error) {
@@ -73,24 +73,24 @@ const CatPagination = () => {
     const inputChange = (e) => {
       const inputValue = document.getElementById("search").value;
       navigate(`?q=${inputValue}`);
-
-      fetch(`https://cats-api.strsqr.cloud/cats?p=${page}&q=${inputValue}`)
-        .then((res) => {
-          console.log(res);
-          return res;
-        })
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            setIsLoaded(true);
-            setItems(result);
-          },
-          (error) => {
-            setIsLoaded(true);
-            setError(error);
-          }
-        );
+      fetchCats(page, inputValue);
     };
+
+    const button = (x) => {
+      const catsLink = `?p=${x}&q=${q}`;
+      return (
+        <button>
+          {" "}
+          <a href={catsLink}>
+            <p> {x} </p>
+          </a>
+        </button>
+      );
+    };
+
+    const pageArray = [
+      ...Array(Math.ceil(catsCount / usersPerPage)).keys(),
+    ].map((x) => x + 1);
 
     return (
       <div className="App">
@@ -99,19 +99,22 @@ const CatPagination = () => {
             <input id="search" onChange={inputChange}></input>
           </form>
         </div>
+
+        <div className="buttonPage">{pageArray.map(button)}</div>
+
         <div className="button">
           <a href={urlCat2}>
             <button type="button" class="btn">
               Назад
             </button>
           </a>
+
           <a href={urlCat}>
             <button type="button" class="btn">
               Вперёд
             </button>
           </a>
         </div>
-
         {displayItems}
       </div>
     );
