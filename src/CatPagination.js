@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import ReactPaginate from "react-paginate";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+
+import axios from "axios";
 
 const CatPagination = () => {
+  let navigate = useNavigate();
   let [params] = useSearchParams();
   const page = Number(params.get("p") ?? "1");
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
+  const [searchValue, setSearchValue] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const usersPerPage = 10;
   const pagesVisited = pageNumber * usersPerPage;
@@ -17,19 +20,22 @@ const CatPagination = () => {
   const urlCat = `/?p=${nextPage}`;
   const urlCat2 = `/?p=${prvPage}`;
 
-  const navigate = useNavigate();
-
   const displayItems = items
     .slice(pagesVisited, pagesVisited + usersPerPage)
     .map((item) => {
       const href = `/${item.slug}`;
       return (
         <div id="cat">
-          <div id="name">
+          <div id="element">
             {" "}
-            <a href={href}> {item.name} </a>{" "}
+            <div className="catName">
+              <a href={href}> {item.name} </a>
+            </div>
+            <div>
+              {" "}
+              <img src={item.image_url} />{" "}
+            </div>
           </div>
-          <img src={item.image_url} />
         </div>
       );
     });
@@ -58,36 +64,29 @@ const CatPagination = () => {
   } else if (!isLoaded) {
     return <div>Загрузка...</div>;
   } else {
-    const pageCount = 10;
-
-    const changePage = ({ selected }) => {
-      console.log("abc");
-      setPageNumber(selected);
-      navigate(`?p=${selected + 1}`);
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const inputValue = document.getElementById("search").value;
+      console.log(inputValue);
+      navigate(inputValue);
     };
-
     return (
       <div className="App">
-        {/* <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
-          pageCount={pageCount}
-          onPageChange={changePage}
-          containerClassName={"navigationButtons"}
-          previousLinkClassName={"previousButton"}
-          nextLinkClassName={"nextButton"}
-          disabledClassName={"navigationDisabled"}
-          activeClassName={"navigationActive"}
-        /> */}
-        <div className="button">
-          <a href={urlCat}>
-            <button type="button">next</button>
-          </a>
+        <div className="Search">
+          <form onSubmit={handleSubmit}>
+            <input id="search"></input>
+          </form>
         </div>
-
         <div className="button">
           <a href={urlCat2}>
-            <button type="button">previous</button>
+            <button type="button" class="btn">
+              Назад
+            </button>
+          </a>
+          <a href={urlCat}>
+            <button type="button" class="btn">
+              Вперёд
+            </button>
           </a>
         </div>
 

@@ -1,15 +1,43 @@
 .App {
   text-align: center;
 }
-
+a {
+  color: rgb(0, 0, 0);
+  margin-top: 10em;
+}
 .cat {
   width: 40%;
-  height: auto;
+  height: 40%;
   background-color: bisque;
   margin: auto;
   border: 2px solid black;
 }
 
+.catName {
+  margin: 1em;
+}
+
+.btn {
+  background-color: #0c0c0c; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.button,
+.Search {
+  margin: 1em;
+}
+.imageCat {
+  width: 100%; /* or any custom size */
+  height: 100%;
+  object-fit: contain;
+}
 .desc {
   width: 40%;
   height: auto;
@@ -19,43 +47,12 @@
   border: 2px solid black;
 }
 
+.catName:hover {
+  color: salmon;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-.navigationButtons {
-  width: 80%;
-  height: 40px;
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  padding-top: 40px;
-}
-
-.navigationButtons a {
-  padding: 10px;
-  margin: 8px;
-  border-radius: 5px;
-  border: 1px solid rgb(70, 18, 18);
-  color: rgb(15, 11, 11);
-  cursor: pointer;
-}
-
-.navigationButtons a:hover {
-  color: white;
-  background-color: rgb(0, 0, 0);
-}
-
-.navigationActive a {
-  color: white;
-  background-color: rgb(37, 37, 37);
-}
-
-.navigationDisabled a {
-  color: grey;
-  background-color: rgb(0, 0, 0);
 }
 
 @media (prefers-reduced-motion: no-preference) {

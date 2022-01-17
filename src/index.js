@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import CatPagination from "./CatPagination";
 import DescCat from "./DescCat";
+import NotFound from "./NotFound";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 
@@ -13,6 +14,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<CatPagination />} />
         <Route path="/:id" element={<DescCat />} />
+        <Route path="not_found" element={<NotFound />} />
       </Routes>
     </Router>
   </React.StrictMode>,
@@ -23,3 +25,5 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+//
