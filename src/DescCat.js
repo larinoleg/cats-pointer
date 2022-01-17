@@ -47,7 +47,7 @@ const DescCat = () => {
         <div className="desc">
           <div className="catName">
             <h1> {catData.name} </h1>
-            <a href="http://localhost:3000/">
+            <a href="/">
               <p> К списку котов </p>
             </a>
           </div>
