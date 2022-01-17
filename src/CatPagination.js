@@ -79,10 +79,10 @@ const CatPagination = () => {
     const button = (x) => {
       const catsLink = `?p=${x}&q=${q}`;
       return (
-        <button>
+        <button className="cattyButton">
           {" "}
           <a href={catsLink}>
-            <p> {x} </p>
+            <p className="bText"> {x} </p>
           </a>
         </button>
       );

@@ -29,6 +29,16 @@ a {
   font-size: 16px;
 }
 
+.cattyButton {
+  background-color: #111;
+  margin: 1em;
+  width: auto;
+}
+.bText {
+  color: #fff;
+  margin: 1em;
+}
+
 .button,
 .Search {
   margin: 1em;
