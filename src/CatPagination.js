@@ -7,7 +7,7 @@ const CatPagination = () => {
   let navigate = useNavigate();
   let [params] = useSearchParams();
   const page = Number(params.get("p") ?? "1");
-
+  const q = params.get("q") ?? "";
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
@@ -41,7 +41,7 @@ const CatPagination = () => {
     });
 
   useEffect(() => {
-    fetch(`https://cats-api.strsqr.cloud/cats?p=${page}`)
+    fetch(`https://cats-api.strsqr.cloud/cats?p=${page}&q=${q}`)
       .then((res) => {
         console.log(res);
         return res;
@@ -67,14 +67,36 @@ const CatPagination = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
       const inputValue = document.getElementById("search").value;
-      console.log(inputValue);
-      navigate(inputValue);
+      navigate(`?q=${inputValue}`);
     };
+
+    const inputChange = (e) => {
+      const inputValue = document.getElementById("search").value;
+      navigate(`?q=${inputValue}`);
+
+      fetch(`https://cats-api.strsqr.cloud/cats?p=${page}&q=${inputValue}`)
+        .then((res) => {
+          console.log(res);
+          return res;
+        })
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            setItems(result);
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        );
+    };
+
     return (
       <div className="App">
         <div className="Search">
           <form onSubmit={handleSubmit}>
-            <input id="search"></input>
+            <input id="search" onChange={inputChange}></input>
           </form>
         </div>
         <div className="button">
